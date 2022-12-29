@@ -143,23 +143,3 @@ func InsertCardBottom(c Card, cs []Card) ([]Card, error) {
 
 	return cs, nil
 }
-
-// func main() {
-// 	d := LoadDeck()
-
-// 	// d[0].PrintCard()
-// 	d.Shuffle()
-
-// 	// d[3].PrintCard()
-
-// 	h := d.TakeCard()
-// 	fmt.Println(len(d))
-// 	h.PrintCard()
-
-// 	hand := d.TakeCards(1)
-
-// 	for _, card := range hand {
-// 		card.PrintCard()
-// 	}
-// 	fmt.Println(len(d))
-// }
