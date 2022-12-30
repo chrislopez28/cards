@@ -7,9 +7,6 @@ import (
 	"time"
 )
 
-type Suit string
-type CardValue string
-
 const (
 	Club    Suit = "C"
 	Diamond Suit = "D"
@@ -33,28 +30,64 @@ const (
 	King  CardValue = "K"
 )
 
+type Suit string
+
+type CardValue string
+
+// Card -----------------------------------------------------------------------
+
 type Card struct {
 	Suit  Suit
 	Value CardValue
 }
 
+func (c Card) PrintCard() {
+	fmt.Println(c.String())
+}
+
+// String returns a short representation of the card (e.g. AH for Ace of Hearts, 2C for Two of Clubs)
+func (c Card) String() string {
+	return fmt.Sprintf("%v%v", c.Value, c.Suit)
+}
+
+// Card Slices ----------------------------------------------------------------
+
+func IsCardStackEmpty(cs []Card) bool {
+	return len(cs) == 0
+}
+
+func InsertCardBottom(c Card, cs []Card) ([]Card, error) {
+	cs = append([]Card{c}, cs...)
+
+	return cs, nil
+}
+
+func TakeCard(cs []Card) (Card, []Card, error) {
+	if len(cs) == 0 {
+		return Card{}, cs, errors.New("no cards left")
+	}
+
+	var c Card
+	c, cs = (cs)[len(cs)-1], (cs)[:(len(cs)-1)]
+
+	return c, cs, nil
+}
+
+// Shuffle implements the Fisher-Yates shuffle
+func Shuffle(cs []Card) []Card {
+	rand.Seed(time.Now().UnixNano())
+
+	for i := len(cs) - 1; i > 0; i-- {
+		j := rand.Intn(i)
+		cs[i], cs[j] = cs[j], cs[i]
+	}
+
+	return cs
+}
+
+// Deck -----------------------------------------------------------------------
+
 type Deck []Card
-type Hand []Card
-
-type Cards interface {
-	PrintCards()
-}
-
-func (d Deck) PrintCards() {
-	for _, card := range d {
-		card.PrintCard()
-	}
-}
-func (h Hand) PrintCards() {
-	for _, card := range h {
-		card.PrintCard()
-	}
-}
 
 func LoadDeckN(numberDecks int) Deck {
 	suits := [4]Suit{Club, Diamond, Heart, Spade}
@@ -76,8 +109,10 @@ func LoadDeck() Deck {
 	return LoadDeckN(1)
 }
 
-func (c Card) PrintCard() {
-	fmt.Printf("%v%v\n", c.Value, c.Suit)
+func (d Deck) PrintCards() {
+	for _, card := range d {
+		card.PrintCard()
+	}
 }
 
 func (d Deck) Shuffle() {
@@ -117,29 +152,4 @@ func (d *Deck) DealCardsBottom(n int) []Card {
 	x, *d = (*d)[0:n-1], (*d)[n:]
 
 	return x
-}
-
-func IsCardStackEmpty(cs []Card) bool {
-	if len(cs) == 0 {
-		return true
-	} else {
-		return false
-	}
-}
-
-func TakeCard(cs []Card) (Card, []Card, error) {
-	if len(cs) == 0 {
-		return Card{}, cs, errors.New("no cards left")
-	}
-
-	var c Card
-	c, cs = (cs)[len(cs)-1], (cs)[:(len(cs)-1)]
-
-	return c, cs, nil
-}
-
-func InsertCardBottom(c Card, cs []Card) ([]Card, error) {
-	cs = append([]Card{c}, cs...)
-
-	return cs, nil
 }
