@@ -12,6 +12,7 @@ const (
 	Diamond Suit = "D"
 	Heart   Suit = "H"
 	Spade   Suit = "S"
+	NoSuit  Suit = "_"
 )
 
 const (
@@ -28,6 +29,7 @@ const (
 	Jack  CardValue = "J"
 	Queen CardValue = "Q"
 	King  CardValue = "K"
+	Joker CardValue = "★"
 )
 
 type Suit string
@@ -54,6 +56,12 @@ func (c Card) String() string {
 
 func IsCardStackEmpty(cs []Card) bool {
 	return len(cs) == 0
+}
+
+func InsertCard(c Card, cs []Card) ([]Card, error) {
+	cs = append(cs, c)
+
+	return cs, nil
 }
 
 func InsertCardBottom(c Card, cs []Card) ([]Card, error) {
@@ -107,6 +115,19 @@ func LoadDeckN(numberDecks int) Deck {
 
 func LoadDeck() Deck {
 	return LoadDeckN(1)
+}
+
+func (d *Deck) AddJokerN(n int) {
+	var err error
+
+	for i := 0; i < n; i++ {
+		*d, err = InsertCard(Card{Suit: NoSuit, Value: Joker}, *d)
+
+		if err != nil {
+			fmt.Print(err)
+			return
+		}
+	}
 }
 
 func (d Deck) PrintCards() {

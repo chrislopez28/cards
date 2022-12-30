@@ -1,4 +1,4 @@
-module cards
+module github.com/chrislopez28/cards
 
 go 1.19
 

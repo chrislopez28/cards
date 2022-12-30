@@ -56,6 +56,29 @@ func TestDealCardBottom(t *testing.T) {
 	}
 }
 
+func TestInsertJokerN(t *testing.T) {
+	d := LoadDeck()
+	d.AddJokerN(1)
+
+	expectedCard := Card{Suit: NoSuit, Value: Joker}
+
+	actualCard := d[len(d)-1]
+
+	if !cmp.Equal(expectedCard, actualCard) {
+		t.Errorf("Expected top card to be %s. Got %s instead", expectedCard.String(), actualCard.String())
+	}
+
+	if len(d) != 53 {
+		t.Errorf("Expected deck length to be 53. Got %v instead.", len(d))
+	}
+
+	d.AddJokerN(2)
+
+	if len(d) != 55 {
+		t.Errorf("Expected deck length to be 55. Got %v instead.", len(d))
+	}
+}
+
 func TestInsertCardBottom(t *testing.T) {
 	c1 := Card{Suit: Club, Value: Ace}
 	c2 := Card{Suit: Club, Value: Two}
